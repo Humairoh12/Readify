@@ -14,6 +14,11 @@ class PeminjamanModel extends Model
         'id_petugas',
         'tanggal_pinjam',
         'tanggal_kembali',
-        'status'
+        'status',
+        'id_buku',
+        'perpanjang',
+        'denda',
+        'metode_bayar',
+        'status_bayar'
     ];
 }

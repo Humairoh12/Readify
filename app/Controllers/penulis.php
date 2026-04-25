@@ -16,7 +16,16 @@ class Penulis extends BaseController
     // 🔹 TAMPIL DATA
     public function index()
     {
-        $data['data'] = $this->model->findAll();
+        $model = new \App\Models\PenulisModel();
+
+        $keyword = $this->request->getGet('keyword');
+
+        if ($keyword) {
+            $data['penulis'] = $model->like('nama_penulis', $keyword)->findAll();
+        } else {
+            $data['penulis'] = $model->findAll();
+        }
+
         return view('penulis/index', $data);
     }
 

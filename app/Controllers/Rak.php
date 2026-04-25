@@ -18,7 +18,13 @@ class Rak extends BaseController
     {
         $model = new \App\Models\RakModel();
 
-        $data['rak'] = $model->findAll(); // 🔥 kirim ke view
+        $keyword = $this->request->getGet('keyword');
+
+        if ($keyword) {
+            $data['rak'] = $model->like('nama_rak', $keyword)->findAll();
+        } else {
+            $data['rak'] = $model->findAll();
+        }
 
         return view('rak/index', $data);
     }

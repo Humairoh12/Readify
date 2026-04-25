@@ -2,9 +2,21 @@
 <?= $this->section('content') ?>
 
 <h3>Data Penerbit</h3>
-<input type="text" name="keyword" placeholder="Cari..."
-    value="<?= $_GET['keyword'] ?? '' ?>">
-<button type="submit">Cari</button>
+<!-- FORM PENCARIAN -->
+<form method="get" action="">
+
+    <input type="text" name="keyword" placeholder="Cari penerbit..."
+        value="<?= $_GET['keyword'] ?? '' ?>">
+
+
+
+    <button type="submit">Cari</button>
+    <a href="<?= base_url('buku') ?>">Reset</a>
+    <a href="<?= base_url('buku/print?' . http_build_query($_GET)) ?>" target="_blank">
+        Print
+    </a>
+</form>
+
 <br>
 <a href="<?= base_url('penerbit/create') ?>">+ Tambah</a>
 
@@ -17,7 +29,7 @@
     </tr>
 
     <?php $no = 1;
-    foreach ($data as $d): ?>
+    foreach ($penerbit as $d): ?>
         <tr>
             <td><?= $no++ ?></td>
             <td><?= $d['nama_penerbit'] ?></td>

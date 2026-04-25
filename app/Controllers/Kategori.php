@@ -15,7 +15,16 @@ class Kategori extends BaseController
 
     public function index()
     {
-        $data['data'] = $this->model->findAll();
+        $model = new \App\Models\KategoriModel();
+
+        $keyword = $this->request->getGet('keyword'); // ← ini penting
+
+        if ($keyword) {
+            $data['kategori'] = $model->like('nama_kategori', $keyword)->findAll();
+        } else {
+            $data['kategori'] = $model->findAll();
+        }
+
         return view('kategori/index', $data);
     }
 

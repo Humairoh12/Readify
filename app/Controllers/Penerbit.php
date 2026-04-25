@@ -16,7 +16,16 @@ class Penerbit extends BaseController
     // 🔹 TAMPIL DATA
     public function index()
     {
-        $data['data'] = $this->model->findAll();
+        $model = new \App\Models\PenerbitModel();
+
+        $keyword = $this->request->getGet('keyword');
+
+        if ($keyword) {
+            $data['penerbit'] = $model->like('nama_penerbit', $keyword)->findAll();
+        } else {
+            $data['penerbit'] = $model->findAll();
+        }
+
         return view('penerbit/index', $data);
     }
 

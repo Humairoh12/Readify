@@ -54,9 +54,11 @@ $routes->get('/peminjaman', 'Peminjaman::index');
 $routes->get('/peminjaman/create', 'Peminjaman::create');
 $routes->post('/peminjaman/store', 'Peminjaman::store');
 $routes->get('/peminjaman/detail/(:num)', 'Peminjaman::detail/$1');
-$routes->get('/peminjaman/kembali/(:num)', 'Peminjaman::kembali/$1');
+$routes->get('/peminjaman/kembalikan/(:num)', 'Peminjaman::kembalikan/$1');
 $routes->get('/peminjaman/delete/(:num)', 'Peminjaman::delete/$1');
-$routes->get('peminjaman/kirimWA/(:num)', 'Peminjaman::kirimWA/$1');
+$routes->get('/peminjaman/kirimWA/(:num)', 'Peminjaman::kirimWA/$1');
+$routes->get('/peminjaman/perpanjang/(:num)', 'Peminjaman::perpanjang/$1');
+$routes->match(['get', 'post'], 'peminjaman/store', 'Peminjaman::store');
 
 $routes->get('/kategori', 'Kategori::index');
 $routes->get('/kategori/create', 'Kategori::create');
@@ -90,3 +92,33 @@ $routes->get('/pengembalian', 'Pengembalian::index');
 $routes->get('/pengembalian/create', 'Pengembalian::create');
 $routes->post('/pengembalian/store', 'Pengembalian::store');
 $routes->get('/pengembalian/delete/(:num)', 'Pengembalian::delete/$1');
+
+$routes->get('/backup', 'Backup::index');
+
+$routes->get('/restore', 'Restore::index');
+$routes->post('/restore/auth', 'Restore::auth');
+$routes->get('/restore/form', 'Restore::form');
+$routes->post('/restore/process', 'Restore::process');
+
+// Anggota
+$routes->post('anggota/store', 'Anggota::store');
+$routes->get('anggota/profil', 'Anggota::editProfil');
+$routes->post('anggota/updateProfil', 'Anggota::updateProfil');
+$routes->get('anggota', function () {
+    return redirect()->to('/anggota/profil');
+});
+
+$routes->group('denda', function ($routes) {
+
+    // halaman utama
+    $routes->get('/', 'Denda::index');
+
+    // bayar denda (WAJIB POST)
+    $routes->post('bayar/(:num)', 'Denda::bayar/$1');
+
+    // verifikasi petugas
+    $routes->get('verifikasi/(:num)', 'Denda::verifikasi/$1');
+
+    // ❌ FIX DI SINI (hapus "denda/" karena sudah di group)
+    $routes->post('hapus/(:num)', 'Denda::hapus/$1');
+});

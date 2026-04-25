@@ -21,14 +21,15 @@ class Peminjaman extends BaseController
     {
         $builder = $this->peminjaman
             ->select('peminjaman.*, 
-                      anggota.nama AS nama_anggota, 
-                      petugas.nama AS nama_petugas, 
-                      buku.judul')
+                anggota.nama AS nama_anggota, 
+                petugas.nama AS nama_petugas, 
+                buku.judul,
+                COALESCE(denda.jumlah_denda, 0) AS denda')
             ->join('users AS anggota', 'anggota.id = peminjaman.id_anggota', 'left')
             ->join('users AS petugas', 'petugas.id = peminjaman.id_petugas', 'left')
-            ->join('buku', 'buku.id_buku = peminjaman.id_buku', 'left');
+            ->join('buku', 'buku.id_buku = peminjaman.id_buku', 'left')
+            ->join('denda', 'denda.id_peminjaman = peminjaman.id_peminjaman', 'left');
 
-        // 🔥 anggota hanya lihat miliknya
         if (session()->get('role') == 'anggota') {
             $builder->where('peminjaman.id_anggota', session()->get('id'));
         }
@@ -41,14 +42,26 @@ class Peminjaman extends BaseController
     // ================= FORM =================
     public function create()
     {
-        $userModel = new UsersModel();
+        $anggotaModel = new \App\Models\AnggotaModel();
+
+        $anggota = $anggotaModel
+            ->where('user_id', session()->get('id'))
+            ->first();
+
+        if (!$anggota || empty($anggota['nisn']) || empty($anggota['alamat']) || empty($anggota['no_hp'])) {
+            return redirect()->to('/anggota/profil')
+                ->with('error', 'Lengkapi profil dulu!');
+        }
+
         $bukuModel = new BukuModel();
         $kategoriModel = new KategoriModel();
+        $userModel = new UsersModel();
 
-        $data['anggota'] = $userModel->where('role', 'anggota')->findAll();
-        $data['petugas'] = $userModel->where('role', 'petugas')->findAll();
-        $data['kategori'] = $kategoriModel->findAll();
-        $data['buku'] = $bukuModel->findAll();
+        $data = [
+            'buku' => $bukuModel->findAll(),
+            'kategori' => $kategoriModel->findAll(),
+            'petugas' => $userModel->where('role', 'petugas')->findAll()
+        ];
 
         return view('peminjaman/create', $data);
     }
@@ -56,17 +69,53 @@ class Peminjaman extends BaseController
     // ================= SIMPAN =================
     public function store()
     {
-        $this->peminjaman->insert([
-            'id_anggota' => session()->get('id'),
-            'id_petugas' => $this->request->getPost('id_petugas'),
-            'id_buku' => $this->request->getPost('id_buku'),
-            'tanggal_pinjam' =>  date('Y-m-d'),
-            'tanggal_kembali' => date('Y-m-d', strtotime('+7 days')),
-            'status' => 'dipinjam'
-        ]);
+        $anggotaModel = new \App\Models\AnggotaModel();
+
+        $anggota = $anggotaModel
+            ->where('user_id', session()->get('id'))
+            ->first();
+
+        if (!$anggota) {
+            return redirect()->to('/anggota/profil')
+                ->with('error', 'Lengkapi profil dulu!');
+        }
+
+        if (
+            empty($anggota['nisn']) ||
+            empty($anggota['alamat']) ||
+            empty($anggota['no_hp'])
+        ) {
+            return redirect()->to('/anggota/profil')
+                ->with('error', 'Profil belum lengkap!');
+        }
+
+        $id_buku = $this->request->getPost('id_buku');
+
+        if (!$id_buku) {
+            return redirect()->back()->with('error', 'Pilih minimal 1 buku!');
+        }
+
+        if (!is_array($id_buku)) {
+            $id_buku = [$id_buku];
+        }
+
+        if (count($id_buku) > 2) {
+            return redirect()->back()->with('error', 'Maksimal 2 buku!');
+        }
+
+        foreach ($id_buku as $buku) {
+            $this->peminjaman->insert([
+                'id_anggota' => session()->get('id'),
+                'id_petugas' => $this->request->getPost('id_petugas'),
+                'id_buku' => $buku,
+                'tanggal_pinjam' => date('Y-m-d'),
+                'tanggal_kembali' => date('Y-m-d', strtotime('+7 days')),
+                'status' => 'dipinjam'
+            ]);
+        }
 
         return redirect()->to('/peminjaman')
-            ->with('success', 'Data peminjaman berhasil ditambahkan');
+            ->with('success', 'Peminjaman berhasil!');
     }
 
     // ================= DETAIL =================
@@ -74,23 +123,66 @@ class Peminjaman extends BaseController
     {
         $data['peminjaman'] = $this->peminjaman
             ->select('peminjaman.*, 
-                      anggota.nama AS nama_anggota, 
-                      petugas.nama AS nama_petugas, 
-                      buku.judul')
+                anggota.nama AS nama_anggota, 
+                petugas.nama AS nama_petugas, 
+                buku.judul,
+                COALESCE(denda.jumlah_denda, 0) AS denda')
             ->join('users AS anggota', 'anggota.id = peminjaman.id_anggota', 'left')
             ->join('users AS petugas', 'petugas.id = peminjaman.id_petugas', 'left')
             ->join('buku', 'buku.id_buku = peminjaman.id_buku', 'left')
-            ->where('id_peminjaman', $id)
+            ->join('denda', 'denda.id_peminjaman = peminjaman.id_peminjaman', 'left')
+            ->where('peminjaman.id_peminjaman', $id)
             ->first();
 
         return view('peminjaman/detail', $data);
     }
 
     // ================= KEMBALIKAN =================
-    public function kembali($id)
+    public function kembalikan($id)
     {
-        $this->peminjaman->update($id, [
-            'status' => 'dikembalikan'
+        $model = new PeminjamanModel();
+        $bukuModel = new BukuModel();
+        $dendaModel = new \App\Models\DendaModel();
+
+        $data = $model->find($id);
+
+        if (!$data) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan');
+        }
+
+        $today = date('Y-m-d');
+
+        $telat = (strtotime($today) - strtotime($data['tanggal_kembali'])) / (60 * 60 * 24);
+        $telat = max(0, floor($telat));
+
+        $denda = 0;
+        $status = 'kembali';
+
+        if ($telat > 0) {
+            $denda = $telat * 1000;
+            $status = 'terlambat';
+        }
+
+        // 🔥 update peminjaman
+        $model->update($id, [
+            'status' => $status,
+            'denda' => $denda,
+            'status_bayar' => ($denda > 0 ? 'belum' : 'lunas')
+        ]);
+
+        // 🔥 SIMPAN KE TABEL DENDA (INI YANG PENTING)
+        if ($denda > 0) {
+            $dendaModel->insert([
+                'id_peminjaman' => $id,
+                'jumlah_denda' => $denda,
+                'status_denda' => 'belum bayar'
+            ]);
+        }
+
+        // update stok buku
+        $buku = $bukuModel->find($data['id_buku']);
+        $bukuModel->update($data['id_buku'], [
+            'tersedia' => $buku['tersedia'] + 1
         ]);
 
         return redirect()->to('/peminjaman')->with('success', 'Buku dikembalikan');
@@ -100,9 +192,34 @@ class Peminjaman extends BaseController
     public function delete($id)
     {
         $this->peminjaman->delete($id);
+        return redirect()->to('/peminjaman')->with('success', 'Data berhasil dihapus');
+    }
+    public function perpanjang($id)
+    {
+        $model = new PeminjamanModel();
 
-        return redirect()->to('/peminjaman')
-            ->with('success', 'Data berhasil dihapus');
+        $data = $model->find($id);
+
+        if (!$data) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan');
+        }
+
+        if ($data['status'] == 'dikembalikan') {
+            return redirect()->back()->with('error', 'Buku sudah dikembalikan');
+        }
+
+        if ($data['perpanjang'] >= 2) {
+            return redirect()->back()->with('error', 'Maksimal 2x perpanjang');
+        }
+
+        $tanggalBaru = date('Y-m-d', strtotime($data['tanggal_kembali'] . ' +3 days'));
+
+        $model->update($id, [
+            'tanggal_kembali' => $tanggalBaru,
+            'perpanjang' => $data['perpanjang'] + 1
+        ]);
+
+        return redirect()->back()->with('success', 'Berhasil diperpanjang');
     }
     public function kirimWA($id)
     {
@@ -111,27 +228,35 @@ class Peminjaman extends BaseController
             ->join('buku', 'buku.id_buku = peminjaman.id_buku', 'left')
             ->join('users as anggota', 'anggota.id = peminjaman.id_anggota', 'left')
             ->join('users as petugas', 'petugas.id = peminjaman.id_petugas', 'left')
-            ->where('id_peminjaman', $id)
+            ->where('peminjaman.id_peminjaman', $id)
             ->first();
 
         if (!$data) {
             return redirect()->back()->with('error', 'Data tidak ditemukan');
         }
 
-        // 📱 nomor tujuan (sementara hardcode dulu)
-        $no = "6281234567890";
+        // 📱 nomor tujuan (ambil dari database kalau ada no_hp)
+        $no = "6281234567890"; // nanti bisa diganti $data['no_hp']
 
-        // ✉️ isi pesan
+        // ✉️ FORMAT PESAN WA
         $pesan = "📚 *INFORMASI PEMINJAMAN BUKU*\n\n";
-        $pesan .= "👤 Anggota: " . $data['nama_anggota'] . "\n";
+        $pesan .= "👤 Nama: " . $data['nama_anggota'] . "\n";
         $pesan .= "📖 Buku: " . $data['judul'] . "\n";
+        $pesan .= "👮 Petugas: " . $data['nama_petugas'] . "\n";
         $pesan .= "📅 Tgl Pinjam: " . $data['tanggal_pinjam'] . "\n";
         $pesan .= "⏳ Jatuh Tempo: " . $data['tanggal_kembali'] . "\n";
-        $pesan .= "📌 Status: " . $data['status'] . "\n\n";
-        $pesan .= "Terima kasih 🙏";
+        $pesan .= "📌 Status: " . strtoupper($data['status']) . "\n";
 
-        $pesan = urlencode($pesan);
+        // 🔥 kalau ada denda
+        if (!empty($data['denda']) && $data['denda'] > 0) {
+            $pesan .= "💸 Denda: Rp " . number_format($data['denda']) . "\n";
+        }
 
-        return redirect()->to("https://wa.me/$no?text=$pesan");
+        $pesan .= "\nTerima kasih 🙏";
+
+        // encode
+        $url = "https://wa.me/$no?text=" . urlencode($pesan);
+
+        return redirect()->to($url);
     }
 }

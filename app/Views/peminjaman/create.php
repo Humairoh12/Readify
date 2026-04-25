@@ -57,23 +57,6 @@
 
     <br><br>
 
-    <!-- 🚚 METODE -->
-    <label>Metode Pengambilan</label><br>
-    <select name="metode" id="metode" onchange="toggleAlamat()">
-        <option value="ambil">Ambil Langsung</option>
-        <option value="antar">Diantar</option>
-    </select>
-
-    <br><br>
-
-    <!-- 📍 ALAMAT -->
-    <div id="alamatBox" style="display:none;">
-        <label>Alamat</label><br>
-        <textarea name="alamat" placeholder="Masukkan alamat lengkap"></textarea>
-    </div>
-
-    <br>
-
     <button type="submit">Simpan</button>
 
 </form>
@@ -103,12 +86,6 @@
 
             b.style.display = cocok ? "block" : "none";
         });
-    }
-
-    // alamat muncul
-    function toggleAlamat() {
-        let metode = document.getElementById("metode").value;
-        document.getElementById("alamatBox").style.display = (metode === 'antar') ? 'block' : 'none';
     }
 </script>
 

@@ -16,8 +16,6 @@
 
     <label>Tanggal Dikembalikan</label><br>
     <input type="date" name="tanggal_dikembalikan"><br><br>
-    <label>Denda</label><br>
-    <input type="number" name="denda" id="denda" value="0"><br><br>
 
     <button type="submit">Simpan</button>
 

@@ -2,9 +2,20 @@
 <?= $this->section('content') ?>
 
 <h3>Data Rak</h3>
-<input type="text" name="keyword" placeholder="Cari ..."
-    value="<?= $_GET['keyword'] ?? '' ?>">
-<button type="submit">Cari</button>
+<!-- FORM PENCARIAN -->
+<form method="get" action="">
+
+    <input type="text" name="keyword" placeholder="Cari judul..."
+        value="<?= $_GET['keyword'] ?? '' ?>">
+
+
+
+    <button type="submit">Cari</button>
+    <a href="<?= base_url('buku') ?>">Reset</a>
+    <a href="<?= base_url('buku/print?' . http_build_query($_GET)) ?>" target="_blank">
+        Print
+    </a>
+</form>
 <br>
 <a href="<?= base_url('rak/create') ?>">+ Tambah</a>
 
