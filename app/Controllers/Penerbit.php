@@ -70,4 +70,12 @@ class Penerbit extends BaseController
         $this->model->delete($id);
         return redirect()->to('/penerbit')->with('success', 'Penerbit berhasil dihapus');
     }
+    public function print()
+    {
+        $model = new \App\Models\PenerbitModel();
+
+        $data['penerbit'] = $model->findAll();
+
+        return view('penerbit/print', $data);
+    }
 }

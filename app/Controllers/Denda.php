@@ -15,43 +15,29 @@ class Denda extends BaseController
 
     public function index()
     {
-        $search = $this->request->getGet('search');
-        $role = session()->get('role');
-        $id_user = session()->get('id');
+        $search = $this->request->getGet('search') ?? $this->request->getGet('keyword');
 
         $builder = $this->dendaModel
-            ->select('denda.*, peminjaman.id_peminjaman, anggota.nama as nama_anggota, petugas.nama as nama_petugas_verif')
+            ->select('denda.*, 
+                  peminjaman.id_peminjaman, 
+                  anggota.nama as nama_anggota, 
+                  petugas.nama as nama_petugas_verif')
             ->join('peminjaman', 'peminjaman.id_peminjaman = denda.id_peminjaman', 'left')
             ->join('anggota', 'anggota.id_anggota = peminjaman.id_anggota', 'left')
             ->join('users as petugas', 'petugas.id = denda.id_petugas_verif', 'left');
 
-        // 🔒 filter anggota
-        if ($role == 'anggota') {
-            $builder->where('peminjaman.id_anggota', $id_user);
-        }
-        // 🔒 filter anggota
-        if ($role == 'anggota') {
-            $builder->where('peminjaman.id_anggota', $id_user);
-        }
-
-        // 🔍 search
-        if ($search) {
+        if (!empty($search)) {
             $builder->groupStart()
-                ->like('users.nama', $search)
+                ->like('anggota.nama', $search)
                 ->orLike('peminjaman.id_peminjaman', $search)
+                ->orLike('denda.status_denda', $search)
                 ->groupEnd();
         }
 
-        // 🔔 NOTIFIKASI
-        $notif = $this->dendaModel
-            ->where('status_denda', 'menunggu verifikasi')
-            ->countAllResults();
+        $data['denda'] = $builder->findAll();
 
-        $data = [
-            'denda' => $builder->findAll(),
-            'search' => $search,
-            'notif' => $notif
-        ];
+        // DEBUG TEMP
+        // dd($data['denda']);
 
         return view('denda/index', $data);
     }
@@ -63,7 +49,6 @@ class Denda extends BaseController
 
         $namaFile = null;
 
-        // ✔ kalau QRIS → wajib file
         if ($metode == 'qris') {
             if (!$file || !$file->isValid()) {
                 return redirect()->back()->with('error', 'QRIS wajib upload bukti');
@@ -71,11 +56,6 @@ class Denda extends BaseController
 
             $namaFile = $file->getRandomName();
             $file->move('uploads/bukti/', $namaFile);
-        }
-
-        // ✔ CASH → tidak pakai file
-        if ($metode == 'cash') {
-            $namaFile = null;
         }
 
         $this->dendaModel->update($id, [
@@ -86,29 +66,39 @@ class Denda extends BaseController
 
         return redirect()->to('/denda');
     }
-    // VERIFIKASI (ADMIN / PETUGAS)
-    // =====================
+
     public function verifikasi($id)
     {
         $this->dendaModel->update($id, [
             'status_denda' => 'lunas',
-            'id_petugas_verif' => session()->get('id'), // HARUS ADA INI
+            'id_petugas_verif' => session()->get('id'),
             'tanggal_verifikasi' => date('Y-m-d H:i:s')
         ]);
 
         return redirect()->to('/denda');
     }
+
     public function hapus($id)
     {
-        $role = session()->get('role');
-
-        if ($role != 'admin') {
+        if (session()->get('role') != 'admin') {
             return redirect()->back()->with('error', 'Tidak punya akses');
         }
 
-        $model = new \App\Models\DendaModel();
-        $model->delete($id);
+        $this->dendaModel->delete($id);
 
         return redirect()->to('/denda')->with('success', 'Data berhasil dihapus');
+    }
+
+    public function print()
+    {
+        $model = new DendaModel();
+
+        $data['denda'] = $model
+            ->select('denda.*, peminjaman.id_peminjaman, anggota.nama as nama_anggota')
+            ->join('peminjaman', 'peminjaman.id_peminjaman = denda.id_peminjaman', 'left')
+            ->join('anggota', 'anggota.id_anggota = peminjaman.id_anggota', 'left')
+            ->findAll();
+
+        return view('denda/print', $data);
     }
 }

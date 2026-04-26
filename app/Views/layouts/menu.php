@@ -1,41 +1,139 @@
-<a href="#"><b>📚 Readify</b>App</a><br>
+<style>
+    /* PROFILE */
+    .menu-wrapper img {
+        object-fit: cover;
+        border: 2px solid #fff;
+    }
 
-<a href="<?= base_url('/') ?>">🏠 Dashboard</a><br>
+    /* NAV ITEM SPACING */
+    .nav-item {
+        margin-bottom: 5px;
+    }
 
-<?php if (session()->get('role') == 'admin'): ?>
-    <a href="<?= base_url('users') ?>">👤 Users</a><br>
-<?php endif; ?>
+    /* ICON */
+    .nav-link i {
+        margin-right: 8px;
+    }
 
-<?php if (in_array(session()->get('role'), ['admin', 'petugas', 'anggota'])): ?>
-    <a href="<?= base_url('buku') ?>">📖 Buku</a><br>
-<?php endif; ?>
+    /* ACTIVE ANIMATION */
+    .nav-link {
+        transition: 0.2s;
+    }
 
-<?php if (session()->get('role') == 'anggota'): ?>
-    <a href="<?= base_url('anggota/profil') ?>">👤 Lihat Profil</a><br>
-<?php endif; ?>
-<?php if (in_array(session()->get('role'), ['admin', 'petugas', 'anggota'])): ?>
-    <a href="<?= base_url('peminjaman') ?>">📥 Peminjaman</a><br>
-<?php endif; ?>
+    .nav-link:hover {
+        transform: translateX(5px);
+    }
+</style>
 
-<?php if (in_array(session()->get('role'), ['admin', 'petugas'])): ?>
-    <a href="<?= base_url('pengembalian') ?>">📤 Pengembalian</a><br>
-<?php endif; ?>
+<div class="menu-wrapper">
 
-<?php if (session()->get('role') == 'admin'): ?>
-    <a href="<?= base_url('kategori') ?>">🏷️ Kategori</a><br>
-    <a href="<?= base_url('penulis') ?>">✍️ Penulis</a><br>
-    <a href="<?= base_url('penerbit') ?>">🏢 Penerbit</a><br>
-    <a href="<?= base_url('rak') ?>">🗄️ Rak</a><br>
-<?php endif; ?>
-<li class="<?= strpos(uri_string(), 'denda') !== false ? 'active' : '' ?>">
-    <a href="<?= base_url('denda') ?>">💰 Denda</a>
-</li>
+    <!-- Profile -->
+    <div class="text-center mb-4">
+        <img src="<?= base_url('uploads/users/' . session()->get('foto')) ?>"
+            class="rounded-circle mb-2" width="70" height="70">
+        <h6 class="mb-0"><?= session('nama'); ?></h6>
+        <small class="text-muted"><?= session('role'); ?></small>
+    </div>
 
-<a href="<?= base_url('users/edit/' . session('id')) ?>">⚙️ Setting</a><br>
-<a href="<?= base_url('logout') ?>">🚪 Logout</a><br>
-<?php if (session()->get('role') == 'admin') : ?>
-    <a href="<?= base_url('/backup') ?>" class="btn btn-success">Backup Database</a>
-<?php endif; ?>
-Masuk sebagai: <b><?= session('nama'); ?> (<?= session('role'); ?>)</b><br><br>
+    <!-- Menu -->
+    <ul class="nav flex-column">
 
-<img src="<?= base_url('uploads/users/' . session()->get('foto')) ?>" height="80" />
+        <li class="nav-item">
+            <a class="nav-link <?= uri_string() == '' ? 'active' : '' ?>" href="<?= base_url('/') ?>">
+                <i class="bi bi-house"></i> Dashboard
+            </a>
+        </li>
+
+        <?php if (session()->get('role') == 'admin'): ?>
+            <li class="nav-item">
+                <a class="nav-link <?= strpos(uri_string(), 'users') !== false ? 'active' : '' ?>" href="<?= base_url('users') ?>">
+                    <i class="bi bi-people"></i> Users
+                </a>
+            </li>
+        <?php endif; ?>
+
+        <?php if (in_array(session()->get('role'), ['admin', 'petugas', 'anggota'])): ?>
+            <li class="nav-item">
+                <a class="nav-link <?= strpos(uri_string(), 'buku') !== false ? 'active' : '' ?>" href="<?= base_url('buku') ?>">
+                    <i class="bi bi-book"></i> Buku
+                </a>
+            </li>
+        <?php endif; ?>
+
+        <?php if (session()->get('role') == 'anggota'): ?>
+            <li class="nav-item">
+                <a class="nav-link" href="<?= base_url('anggota/profil') ?>">
+                    <i class="bi bi-person"></i> Profil
+                </a>
+            </li>
+        <?php endif; ?>
+
+        <?php if (in_array(session()->get('role'), ['admin', 'petugas', 'anggota'])): ?>
+            <li class="nav-item">
+                <a class="nav-link <?= strpos(uri_string(), 'peminjaman') !== false ? 'active' : '' ?>" href="<?= base_url('peminjaman') ?>">
+                    <i class="bi bi-box-arrow-in-down"></i> Peminjaman
+                </a>
+            </li>
+        <?php endif; ?>
+
+        <?php if (in_array(session()->get('role'), ['admin', 'petugas'])): ?>
+            <li class="nav-item">
+                <a class="nav-link <?= strpos(uri_string(), 'pengembalian') !== false ? 'active' : '' ?>" href="<?= base_url('pengembalian') ?>">
+                    <i class="bi bi-box-arrow-up"></i> Pengembalian
+                </a>
+            </li>
+        <?php endif; ?>
+
+        <?php if (session()->get('role') == 'admin'): ?>
+            <li class="nav-item">
+                <a class="nav-link" href="<?= base_url('kategori') ?>">
+                    <i class="bi bi-tags"></i> Kategori
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?= base_url('penulis') ?>">
+                    <i class="bi bi-pencil"></i> Penulis
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?= base_url('penerbit') ?>">
+                    <i class="bi bi-building"></i> Penerbit
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?= base_url('rak') ?>">
+                    <i class="bi bi-archive"></i> Rak
+                </a>
+            </li>
+        <?php endif; ?>
+
+        <li class="nav-item">
+            <a class="nav-link <?= strpos(uri_string(), 'denda') !== false ? 'active' : '' ?>" href="<?= base_url('denda') ?>">
+                <i class="bi bi-cash"></i> Denda
+            </a>
+        </li>
+
+        <li class="nav-item mt-3">
+            <a class="nav-link" href="<?= base_url('users/edit/' . session('id')) ?>">
+                <i class="bi bi-gear"></i> Setting
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link text-danger" href="<?= base_url('logout') ?>">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
+        </li>
+
+    </ul>
+
+    <!-- Backup Button -->
+    <?php if (session()->get('role') == 'admin') : ?>
+        <div class="mt-3">
+            <a href="<?= base_url('/backup') ?>" class="btn btn-success w-100">
+                Backup Database
+            </a>
+        </div>
+    <?php endif; ?>
+
+</div>

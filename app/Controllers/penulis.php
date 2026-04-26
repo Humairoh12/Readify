@@ -68,4 +68,12 @@ class Penulis extends BaseController
         $this->model->delete($id);
         return redirect()->to('/penulis')->with('success', 'Penulis berhasil dihapus');
     }
+    public function print()
+    {
+        $model = new \App\Models\PenulisModel();
+
+        $data['penulis'] = $model->findAll();
+
+        return view('penulis/print', $data);
+    }
 }

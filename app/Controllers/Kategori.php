@@ -62,4 +62,12 @@ class Kategori extends BaseController
         $this->model->delete($id);
         return redirect()->to('/kategori');
     }
+    public function print()
+    {
+        $model = new \App\Models\KategoriModel();
+
+        $data['kategori'] = $model->findAll();
+
+        return view('kategori/print', $data);
+    }
 }

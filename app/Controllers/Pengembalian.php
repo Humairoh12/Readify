@@ -18,17 +18,24 @@ class Pengembalian extends BaseController
     // ================= LIST =================
     public function index()
     {
-        $model = new PengembalianModel();
+        $model = new \App\Models\PengembalianModel();
 
-        $data['pengembalian'] = $model
-            ->select('pengembalian.*, COALESCE(denda.jumlah_denda, 0) as denda')
-            ->join('peminjaman', 'peminjaman.id_peminjaman = pengembalian.id_peminjaman', 'left')
-            ->join('denda', 'denda.id_pengembalian = pengembalian.id_pengembalian', 'left')
-            ->findAll();
+        $keyword = $this->request->getGet('keyword');
+
+        $builder = $model;
+
+        if ($keyword) {
+            $builder = $builder
+                ->like('id_peminjaman', $keyword)
+                ->orLike('tanggal_dikembalikan', $keyword)
+                ->orLike('denda', $keyword);
+        }
+
+        $data['pengembalian'] = $builder->findAll();
+        $data['keyword'] = $keyword;
 
         return view('pengembalian/index', $data);
     }
-
     // ================= FORM =================
     public function create()
     {
@@ -97,5 +104,15 @@ class Pengembalian extends BaseController
 
         return redirect()->to('/pengembalian')
             ->with('success', 'Data pengembalian berhasil dihapus');
+    }
+    public function print()
+    {
+        $model = new \App\Models\PengembalianModel();
+
+        $data['pengembalian'] = $model
+            ->select('pengembalian.*')
+            ->findAll();
+
+        return view('pengembalian/print', $data);
     }
 }

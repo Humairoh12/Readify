@@ -1,123 +1,173 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
-<h3>📚 Data Peminjaman</h3>
+<style>
+    /* TABLE */
+    .table {
+        border-radius: 10px;
+        overflow: hidden;
+    }
 
-<!-- FORM PENCARIAN -->
-<form method="get" action="">
-    <input type="text" name="keyword" placeholder="Cari peminjaman ..."
-        value="<?= $_GET['keyword'] ?? '' ?>">
+    /* AKSI BUTTON WRAP */
+    td .btn-sm {
+        border-radius: 6px;
+        padding: 4px 6px;
+    }
 
-    <button type="submit">🔍 Cari</button>
-    <a href="<?= base_url('peminjaman') ?>">Reset</a>
-</form>
+    /* BADGE */
+    .badge {
+        font-size: 11px;
+        padding: 6px 8px;
+    }
+</style>
 
-<br>
+<div class="dashboard-wrapper">
 
-<?php if (session()->get('role') == 'anggota') : ?>
-    <a href="<?= base_url('peminjaman/create') ?>">➕ Tambah</a>
-<?php endif; ?>
+    <!-- 🔹 HEADER -->
+    <div class="glass-card p-4 mb-4 d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">📚 Data Peminjaman</h4>
 
-<table border="1" cellpadding="6" width="100%">
-    <tr>
-        <th>No</th>
-        <th>Anggota</th>
-        <th>Petugas</th>
-        <th>Buku</th>
-        <th>Tanggal Pinjam</th>
-        <th>Jatuh Tempo</th>
-        <th>Status</th>
-        <th>Denda</th>
-        <th>Aksi</th>
-    </tr>
+        <?php if (session()->get('role') == 'anggota') : ?>
+            <a href="<?= base_url('peminjaman/create') ?>" class="btn btn-primary">
+                <i class="bi bi-plus"></i> Tambah
+            </a>
+        <?php endif; ?>
+    </div>
 
-    <?php $no = 1;
-    foreach ($peminjaman as $p): ?>
+    <!-- 🔹 FILTER -->
+    <div class="glass-card p-3 mb-4">
+        <form method="get" class="row g-2">
 
-        <?php
-        $denda = $p['denda'] ?? 0;
-        ?>
+            <div class="col-md-6">
+                <input type="text" name="keyword" class="form-control"
+                    placeholder="Cari peminjaman..."
+                    value="<?= $_GET['keyword'] ?? '' ?>">
+            </div>
 
-        <tr>
-            <td><?= $no++ ?></td>
-            <td><?= $p['nama_anggota'] ?></td>
-            <td><?= $p['nama_petugas'] ?></td>
-            <td><?= $p['judul'] ?></td>
-            <td><?= $p['tanggal_pinjam'] ?></td>
-            <td><?= $p['tanggal_kembali'] ?></td>
+            <div class="col-md-6 d-flex gap-2">
+                <button class="btn btn-primary">
+                    <i class="bi bi-search"></i>
+                </button>
 
-            <!-- STATUS -->
-            <td>
-                <?php if ($p['status'] == 'dipinjam'): ?>
-                    📖 Dipinjam
-                <?php elseif ($p['status'] == 'terlambat'): ?>
-                    <span style="color:red;">⚠ Terlambat</span>
-                <?php else: ?>
-                    <span style="color:green;">✔ Kembali</span>
-                <?php endif; ?>
-            </td>
-
-            <!-- 🔥 DENDA -->
-            <td style="color: <?= $denda > 0 ? 'red' : 'green' ?>">
-                Rp <?= number_format($denda, 0, ',', '.') ?>
-            </td>
-
-            <td>
-
-                <!-- DETAIL -->
-                <a href="<?= base_url('peminjaman/detail/' . $p['id_peminjaman']) ?>">
-                    🔍 Detail
-                </a> |
-
-                <!-- PERPANJANG -->
-                <a href="<?= base_url('/peminjaman/perpanjang/' . $p['id_peminjaman']) ?>">
-                    🔁 Perpanjang
-                </a> |
-
-                <!-- KEMBALIKAN -->
-                <?php if (in_array(session()->get('role'), ['admin', 'petugas'])): ?>
-                    <a href="<?= base_url('peminjaman/kembalikan/' . $p['id_peminjaman']) ?>">
-                        🔄 Kembali
-                    </a>
-                <?php endif; ?>
-
-                <!-- WA -->
-                <a href="<?= base_url('peminjaman/kirimWA/' . $p['id_peminjaman']) ?>" target="_blank">
-                    📱 Kirim WA
+                <a href="<?= base_url('peminjaman') ?>" class="btn btn-secondary">
+                    Reset
                 </a>
+            </div>
 
-                <br>
+        </form>
+    </div>
 
-                <!-- 💳 PEMBAYARAN -->
-                <?php if ($denda > 0): ?>
+    <!-- 🔹 TABLE -->
+    <div class="glass-card p-3">
 
-                    <?php if ($p['status_bayar'] == 'belum'): ?>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
 
-                        <a href="<?= base_url('denda') ?>" style="color:red;">
-                            💰 Bayar di menu denda
-                        </a>
+                <thead class="table-light">
+                    <tr>
+                        <th>No</th>
+                        <th>Anggota</th>
+                        <th>Petugas</th>
+                        <th>Buku</th>
+                        <th>Tgl Pinjam</th>
+                        <th>Jatuh Tempo</th>
+                        <th>Status</th>
+                        <th>Denda</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
 
-                    <?php elseif ($p['status_bayar'] == 'lunas'): ?>
+                <tbody>
+                    <?php $no = 1;
+                    foreach ($peminjaman as $p): ?>
+                        <?php $denda = $p['denda'] ?? 0; ?>
 
-                        <span style="color:green;">✔ Lunas</span>
+                        <tr>
+                            <td><?= $no++ ?></td>
+                            <td><?= $p['nama_anggota'] ?></td>
+                            <td><?= $p['nama_petugas'] ?></td>
+                            <td><?= $p['judul'] ?></td>
+                            <td><?= $p['tanggal_pinjam'] ?></td>
+                            <td><?= $p['tanggal_kembali'] ?></td>
 
-                    <?php endif; ?>
+                            <!-- STATUS -->
+                            <td>
+                                <?php if ($p['status'] == 'dipinjam'): ?>
+                                    <span class="badge bg-primary">Dipinjam</span>
+                                <?php elseif ($p['status'] == 'terlambat'): ?>
+                                    <span class="badge bg-danger">Terlambat</span>
+                                <?php else: ?>
+                                    <span class="badge bg-success">Kembali</span>
+                                <?php endif; ?>
+                            </td>
 
-                <?php endif; ?>
+                            <!-- DENDA -->
+                            <td>
+                                <span class="badge <?= $denda > 0 ? 'bg-danger' : 'bg-success' ?>">
+                                    Rp <?= number_format($denda, 0, ',', '.') ?>
+                                </span>
+                            </td>
 
-                <br>
+                            <!-- AKSI -->
+                            <td class="d-flex flex-wrap gap-1">
 
-                <!-- HAPUS -->
-                <a href="<?= base_url('peminjaman/delete/' . $p['id_peminjaman']) ?>"
-                    onclick="return confirm('Hapus?')">
-                    🗑 Hapus
-                </a>
+                                <a href="<?= base_url('peminjaman/detail/' . $p['id_peminjaman']) ?>"
+                                    class="btn btn-info btn-sm">
+                                    <i class="bi bi-eye"></i>
+                                </a>
 
-            </td>
-        </tr>
+                                <a href="<?= base_url('peminjaman/perpanjang/' . $p['id_peminjaman']) ?>"
+                                    class="btn btn-warning btn-sm">
+                                    <i class="bi bi-arrow-repeat"></i>
+                                </a>
 
-    <?php endforeach; ?>
+                                <?php if (in_array(session()->get('role'), ['admin', 'petugas'])): ?>
+                                    <a href="<?= base_url('peminjaman/kembalikan/' . $p['id_peminjaman']) ?>"
+                                        class="btn btn-success btn-sm">
+                                        <i class="bi bi-check-circle"></i>
+                                    </a>
+                                <?php endif; ?>
 
-</table>
+                                <a href="<?= base_url('peminjaman/kirimWA/' . $p['id_peminjaman']) ?>"
+                                    target="_blank"
+                                    class="btn btn-success btn-sm">
+                                    <i class="bi bi-whatsapp"></i>
+                                </a>
+
+                                <a href="<?= base_url('peminjaman/delete/' . $p['id_peminjaman']) ?>"
+                                    onclick="return confirm('Hapus?')"
+                                    class="btn btn-danger btn-sm">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+
+                            </td>
+                        </tr>
+
+                        <!-- 💳 STATUS BAYAR -->
+                        <?php if ($denda > 0): ?>
+                            <tr>
+                                <td colspan="9">
+                                    <?php if ($p['status_bayar'] == 'belum'): ?>
+                                        <span class="text-danger">
+                                            💰 Belum bayar — silakan ke menu denda
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="text-success">
+                                            ✔ Sudah lunas
+                                        </span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+
+                    <?php endforeach; ?>
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+
+</div>
 
 <?= $this->endSection() ?>

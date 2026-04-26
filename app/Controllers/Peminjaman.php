@@ -259,4 +259,25 @@ class Peminjaman extends BaseController
 
         return redirect()->to($url);
     }
+    public function print()
+    {
+        $model = new \App\Models\PeminjamanModel();
+
+        $data['peminjaman'] = $model
+            ->select('peminjaman.*,
+              anggota.nisn as nama_anggota,
+              users.nama as nama_petugas,
+              buku.judul,
+              denda.jumlah_denda')
+
+            ->join('anggota', 'anggota.id_anggota = peminjaman.id_anggota', 'left')
+            ->join('petugas', 'petugas.id_petugas = peminjaman.id_petugas', 'left')
+            ->join('users', 'users.id = petugas.user_id', 'left')
+            ->join('buku', 'buku.id_buku = peminjaman.id_buku', 'left')
+            ->join('denda', 'denda.id_peminjaman = peminjaman.id_peminjaman', 'left')
+
+            ->findAll();
+
+        return view('peminjaman/print', $data);
+    }
 }

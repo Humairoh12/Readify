@@ -1,24 +1,69 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
-<h3>Form Pengembalian</h3>
+<style>
+    /* FORM */
+    .form-label {
+        font-weight: 600;
+        color: #555;
+    }
 
-<form action="<?= base_url('pengembalian/store') ?>" method="post">
+    .form-control,
+    .form-select {
+        border-radius: 8px;
+    }
+</style>
 
-    <label>Peminjaman</label><br>
-    <select name="id_peminjaman">
-        <?php foreach ($peminjaman as $p): ?>
-            <option value="<?= $p['id_peminjaman'] ?>">
-                ID <?= $p['id_peminjaman'] ?>
-            </option>
-        <?php endforeach; ?>
-    </select><br><br>
+<div class="dashboard-wrapper">
 
-    <label>Tanggal Dikembalikan</label><br>
-    <input type="date" name="tanggal_dikembalikan"><br><br>
+    <!-- 🔹 HEADER -->
+    <div class="glass-card p-4 mb-4 d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Form Pengembalian</h4>
 
-    <button type="submit">Simpan</button>
+        <a href="<?= base_url('pengembalian') ?>" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Kembali
+        </a>
+    </div>
 
-</form>
+    <!-- 🔹 FORM -->
+    <div class="glass-card p-4">
 
-<?= $this->endSection() ?>t
+        <form action="<?= base_url('pengembalian/store') ?>" method="post">
+
+            <!-- PEMINJAMAN -->
+            <div class="mb-3">
+                <label class="form-label">Peminjaman</label>
+                <select name="id_peminjaman" class="form-select" required>
+                    <option value="">-- Pilih Peminjaman --</option>
+                    <?php foreach ($peminjaman as $p): ?>
+                        <option value="<?= $p['id_peminjaman'] ?>">
+                            ID <?= $p['id_peminjaman'] ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <!-- TANGGAL -->
+            <div class="mb-3">
+                <label class="form-label">Tanggal Dikembalikan</label>
+                <input type="date" name="tanggal_dikembalikan" class="form-control" required>
+            </div>
+
+            <!-- BUTTON -->
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save"></i> Simpan
+                </button>
+
+                <a href="<?= base_url('pengembalian') ?>" class="btn btn-secondary">
+                    Batal
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<?= $this->endSection() ?>

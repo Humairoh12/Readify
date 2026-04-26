@@ -89,4 +89,12 @@ class Rak extends BaseController
         $data['rak'] = $this->rak->find($id);
         return view('rak/detail', $data);
     }
+    public function print()
+    {
+        $model = new \App\Models\RakModel();
+
+        $data['rak'] = $model->findAll();
+
+        return view('rak/print', $data);
+    }
 }

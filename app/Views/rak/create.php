@@ -1,17 +1,25 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
-<h3>Tambah Rak</h3>
+<div class="card-custom">
+    <h3 class="title">Tambah Rak</h3>
 
-<form action="<?= base_url('rak/store') ?>" method="post">
-    <label>Nama Rak</label><br>
-    <input type="text" name="nama_rak"><br><br>
+    <form action="<?= base_url('rak/store') ?>" method="post">
 
-    <label>Lokasi</label><br>
-    <input type="text" name="lokasi"><br><br>
+        <div class="mb-3">
+            <label class="form-label">Nama Rak</label>
+            <input type="text" name="nama_rak" class="form-control" required>
+        </div>
 
-    <button type="submit">Simpan</button>
-    <a href="<?= base_url('rak') ?>">Kembali</a>
-</form>
+        <div class="mb-3">
+            <label class="form-label">Lokasi</label>
+            <input type="text" name="lokasi" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-custom">Simpan</button>
+        <a href="<?= base_url('rak') ?>" class="btn btn-secondary btn-custom">Kembali</a>
+
+    </form>
+</div>
 
 <?= $this->endSection() ?>

@@ -59,6 +59,7 @@ $routes->get('/peminjaman/delete/(:num)', 'Peminjaman::delete/$1');
 $routes->get('/peminjaman/kirimWA/(:num)', 'Peminjaman::kirimWA/$1');
 $routes->get('/peminjaman/perpanjang/(:num)', 'Peminjaman::perpanjang/$1');
 $routes->match(['get', 'post'], 'peminjaman/store', 'Peminjaman::store');
+$routes->get('peminjaman/print', 'Peminjaman::print');
 
 $routes->get('/kategori', 'Kategori::index');
 $routes->get('/kategori/create', 'Kategori::create');
@@ -66,6 +67,7 @@ $routes->post('/kategori/store', 'Kategori::store');
 $routes->get('/kategori/edit/(:num)', 'Kategori::edit/$1');
 $routes->post('/kategori/update/(:num)', 'Kategori::update/$1');
 $routes->get('/kategori/delete/(:num)', 'Kategori::delete/$1');
+$routes->get('kategori/print', 'Kategori::print');
 
 $routes->get('/penulis', 'Penulis::index');
 $routes->get('/penulis/create', 'Penulis::create');
@@ -73,6 +75,7 @@ $routes->post('/penulis/store', 'Penulis::store');
 $routes->get('/penulis/edit/(:num)', 'Penulis::edit/$1');
 $routes->post('/penulis/update/(:num)', 'Penulis::update/$1');
 $routes->get('/penulis/delete/(:num)', 'Penulis::delete/$1');
+$routes->get('penulis/print', 'Penulis::print');
 
 $routes->get('/penerbit', 'Penerbit::index');
 $routes->get('/penerbit/create', 'Penerbit::create');
@@ -80,6 +83,7 @@ $routes->post('/penerbit/store', 'Penerbit::store');
 $routes->get('/penerbit/edit/(:num)', 'Penerbit::edit/$1');
 $routes->post('/penerbit/update/(:num)', 'Penerbit::update/$1');
 $routes->get('/penerbit/delete/(:num)', 'Penerbit::delete/$1');
+$routes->get('penerbit/print', 'Penerbit::print');
 
 $routes->get('/rak', 'Rak::index');
 $routes->get('/rak/create', 'Rak::create');
@@ -87,11 +91,13 @@ $routes->post('/rak/store', 'Rak::store');
 $routes->get('/rak/edit/(:num)', 'Rak::edit/$1');
 $routes->post('/rak/update/(:num)', 'Rak::update/$1');
 $routes->get('/rak/delete/(:num)', 'Rak::delete/$1');
+$routes->get('rak/print', 'Rak::print');
 
 $routes->get('/pengembalian', 'Pengembalian::index');
 $routes->get('/pengembalian/create', 'Pengembalian::create');
 $routes->post('/pengembalian/store', 'Pengembalian::store');
 $routes->get('/pengembalian/delete/(:num)', 'Pengembalian::delete/$1');
+$routes->get('pengembalian/print', 'Pengembalian::print');
 
 $routes->get('/backup', 'Backup::index');
 
@@ -119,6 +125,9 @@ $routes->group('denda', function ($routes) {
     // verifikasi petugas
     $routes->get('verifikasi/(:num)', 'Denda::verifikasi/$1');
 
-    // ❌ FIX DI SINI (hapus "denda/" karena sudah di group)
+    // hapus
     $routes->post('hapus/(:num)', 'Denda::hapus/$1');
+
+    // ✅ PRINT (INI YANG BENAR)
+    $routes->get('print', 'Denda::print');
 });

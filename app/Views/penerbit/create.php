@@ -1,17 +1,25 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
-<h3>Tambah Penerbit</h3>
+<div class="card-custom">
+    <h3 class="title">Tambah Penerbit</h3>
 
-<form action="<?= base_url('penerbit/store') ?>" method="post">
-    <label>Nama Penerbit</label><br>
-    <input type="text" name="nama_penerbit"><br><br>
+    <form action="<?= base_url('penerbit/store') ?>" method="post">
 
-    <label>Alamat</label><br>
-    <textarea name="alamat"></textarea><br><br>
+        <div class="mb-3">
+            <label class="form-label">Nama Penerbit</label>
+            <input type="text" name="nama_penerbit" class="form-control" required>
+        </div>
 
-    <button type="submit">Simpan</button>
-    <a href="<?= base_url('penerbit') ?>">Kembali</a>
-</form>
+        <div class="mb-3">
+            <label class="form-label">Alamat</label>
+            <textarea name="alamat" class="form-control" rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-custom">Simpan</button>
+        <a href="<?= base_url('penerbit') ?>" class="btn btn-secondary btn-custom">Kembali</a>
+
+    </form>
+</div>
 
 <?= $this->endSection() ?>
