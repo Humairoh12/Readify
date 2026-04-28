@@ -25,7 +25,7 @@
 
     <!-- 🔹 HEADER -->
     <div class="glass-card p-4 mb-4 d-flex justify-content-between align-items-center">
-        <h4 class="mb-0">📚 Data Peminjaman</h4>
+        <h4 class="mb-0">📚 Data Peminjaman buku</h4>
 
         <?php if (session()->get('role') == 'anggota') : ?>
             <a href="<?= base_url('peminjaman/create') ?>" class="btn btn-primary">

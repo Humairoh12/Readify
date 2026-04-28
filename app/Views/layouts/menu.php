@@ -76,7 +76,7 @@
             </li>
         <?php endif; ?>
 
-        <?php if (in_array(session()->get('role'), ['admin', 'petugas'])): ?>
+        <?php if (in_array(session()->get('role'), ['admin', 'petugas', 'anggota'])): ?>
             <li class="nav-item">
                 <a class="nav-link <?= strpos(uri_string(), 'pengembalian') !== false ? 'active' : '' ?>" href="<?= base_url('pengembalian') ?>">
                     <i class="bi bi-box-arrow-up"></i> Pengembalian

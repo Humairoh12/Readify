@@ -32,7 +32,7 @@ CREATE TABLE `anggota` (
   `nama` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id_anggota`),
   KEY `anggota_ibfk_1` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +41,7 @@ CREATE TABLE `anggota` (
 
 LOCK TABLES `anggota` WRITE;
 /*!40000 ALTER TABLE `anggota` DISABLE KEYS */;
-INSERT INTO `anggota` VALUES (4,22,'1234567','bandung','1234567890','2026-04-23',NULL),(5,23,'98563214587','bandung','032548555','2026-04-23',NULL),(6,3,'98563214587','bandung','02154584874','2026-04-23',NULL),(7,24,'98563214587','bandung','02154584874','2026-04-23',NULL);
+INSERT INTO `anggota` VALUES (4,22,'1234567','bandung','1234567890','2026-04-23',NULL),(5,23,'98563214587','bandung','032548555','2026-04-23',NULL),(6,3,'98563214587','bandung','02154584874','2026-04-23',NULL),(7,24,'98563214587','bandung','02154584874','2026-04-23',NULL),(8,28,'98563214587','tanjungsari','02154584874','2026-04-27',NULL);
 /*!40000 ALTER TABLE `anggota` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -74,7 +74,7 @@ CREATE TABLE `buku` (
   CONSTRAINT `buku_ibfk_1` FOREIGN KEY (`id_kategori`) REFERENCES `kategori` (`id_kategori`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `buku_ibfk_2` FOREIGN KEY (`id_penulis`) REFERENCES `penulis` (`id_penulis`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `buku_ibfk_3` FOREIGN KEY (`id_penerbit`) REFERENCES `penerbit` (`id_penerbit`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -83,7 +83,7 @@ CREATE TABLE `buku` (
 
 LOCK TABLES `buku` WRITE;
 /*!40000 ALTER TABLE `buku` DISABLE KEYS */;
-INSERT INTO `buku` VALUES (22,'9786020678351','aku yang sudah lama hilang',2,7,11,2024,11,12,'Buku ini dirancang sebagai panduan untuk merunut kembali jiwa yang sering diabaikan dalam kehidupan dewasa yang sibuk dan membingungkan. ','1777154565_03b9a68e9d046ce131bc.jpg','2026-04-22 15:39:39',0),(25,'9786020655222','Saat-Saat Jauh',2,10,14,2021,10,10,'Novel ini mengisahkan tentang hubungan percintaan jarak jauh antara Aline, seorang perawat yang mengabdikan diri di Panti Jompo J&J, dan Alex, seorang dokter internship di RS Andropeda.','1776873776_c2e49b583311ee7639a9.jpg','2026-04-22 16:02:56',0),(26,' 9786238944026','Makanya, Mikir!',2,11,15,2025,10,10,'Buku ini ditulis oleh dua figur pemengaruh (influencer) yang aktif dalam isu sosial, politik, dan pendidikan, yaitu Abigail Limuria dan Cania Citta. ','1776873961_42de83af30bb0c16bfc2.png','2026-04-22 16:06:01',0),(27,' 9786020327662','Insecure',2,12,16,2016,10,10,'Novel ini mengisahkan tentang Zee Rasyid, seorang siswi pendiam dan tertutup yang memiliki trauma masa lalu, sehingga ia cenderung menarik diri dari lingkungan.','1776874109_96ea4155df9e5be759cf.png','2026-04-22 16:08:29',0),(28,' 978-602-208-372-6','Nak, Kamu Gapapa, Kan?',2,13,17,2024,10,10,'Novel ini merupakan buku motivasi/fiksi yang menyentuh hati, mengangkat tema kesepian, kehilangan, dan pencarian kasih sayang yang tidak didapatkan di rumah.','1776874279_724d4171a449fec6d329.jpg','2026-04-22 16:11:19',0);
+INSERT INTO `buku` VALUES (22,'9786020678351','aku yang sudah lama hilang',2,7,11,2024,11,22,'Buku ini dirancang sebagai panduan untuk merunut kembali jiwa yang sering diabaikan dalam kehidupan dewasa yang sibuk dan membingungkan. ','1777154565_03b9a68e9d046ce131bc.jpg','2026-04-22 15:39:39',0),(25,'9786020655222','Saat-Saat Jauh',2,10,14,2021,10,10,'Novel ini mengisahkan tentang hubungan percintaan jarak jauh antara Aline, seorang perawat yang mengabdikan diri di Panti Jompo J&J, dan Alex, seorang dokter internship di RS Andropeda.','1776873776_c2e49b583311ee7639a9.jpg','2026-04-22 16:02:56',0),(26,' 9786238944026','Makanya, Mikir!',2,11,15,2025,10,10,'Buku ini ditulis oleh dua figur pemengaruh (influencer) yang aktif dalam isu sosial, politik, dan pendidikan, yaitu Abigail Limuria dan Cania Citta. ','1776873961_42de83af30bb0c16bfc2.png','2026-04-22 16:06:01',0),(27,' 9786020327662','Insecure',2,12,16,2016,10,10,'Novel ini mengisahkan tentang Zee Rasyid, seorang siswi pendiam dan tertutup yang memiliki trauma masa lalu, sehingga ia cenderung menarik diri dari lingkungan.','1776874109_96ea4155df9e5be759cf.png','2026-04-22 16:08:29',0),(28,' 978-602-208-372-6','Nak, Kamu Gapapa, Kan?',2,13,17,2024,10,10,'Novel ini merupakan buku motivasi/fiksi yang menyentuh hati, mengangkat tema kesepian, kehilangan, dan pencarian kasih sayang yang tidak didapatkan di rumah.','1776874279_724d4171a449fec6d329.jpg','2026-04-22 16:11:19',0),(29,'978-602-427-958-5','BIOLOGI ',4,4,19,2012,11,11,'panduan komprehensif yang mempelajari kehidupan dan makhluk hidup, mencakup struktur, fungsi, pertumbuhan, evolusi, hingga interaksi mereka dengan lingkungan. ','1777199473_ec05f672eca6b1ff8212.jpg','2026-04-26 10:31:13',0),(30,'9789793062793','Naruto',12,3,12,2014,10,10,'komik naruto','1777199566_00f85761e332fad05131.jpg','2026-04-26 10:32:46',0);
 /*!40000 ALTER TABLE `buku` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -99,7 +99,7 @@ CREATE TABLE `buku_rak` (
   `id_buku` int(11) NOT NULL,
   `id_rak` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -108,7 +108,7 @@ CREATE TABLE `buku_rak` (
 
 LOCK TABLES `buku_rak` WRITE;
 /*!40000 ALTER TABLE `buku_rak` DISABLE KEYS */;
-INSERT INTO `buku_rak` VALUES (1,17,4),(2,18,5),(3,19,6),(4,20,7),(5,21,4),(6,22,6),(7,23,6),(8,24,6),(9,25,6),(10,26,6),(11,27,6),(12,28,6);
+INSERT INTO `buku_rak` VALUES (1,17,4),(2,18,5),(3,19,6),(4,20,7),(5,21,4),(6,22,6),(7,23,6),(8,24,6),(9,25,6),(10,26,6),(11,27,6),(12,28,6),(13,29,4),(14,30,7),(15,31,4);
 /*!40000 ALTER TABLE `buku_rak` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -130,7 +130,7 @@ CREATE TABLE `denda` (
   `id_peminjaman` int(11) NOT NULL,
   `status_denda` varchar(50) DEFAULT 'belum bayar',
   PRIMARY KEY (`id_denda`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -242,7 +242,7 @@ CREATE TABLE `peminjaman` (
   PRIMARY KEY (`id_peminjaman`),
   KEY `peminjaman_ibfk_1` (`id_anggota`),
   KEY `peminjaman_ibfk_2` (`id_petugas`)
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -251,7 +251,7 @@ CREATE TABLE `peminjaman` (
 
 LOCK TABLES `peminjaman` WRITE;
 /*!40000 ALTER TABLE `peminjaman` DISABLE KEYS */;
-INSERT INTO `peminjaman` VALUES (53,24,20,'2026-04-25','2026-05-08','terlambat',22,2,NULL,'belum',0),(54,24,20,'2026-04-25','2026-05-05','',22,1,NULL,'lunas',0);
+INSERT INTO `peminjaman` VALUES (53,24,20,'2026-04-25','2026-05-08','',22,2,NULL,'lunas',0),(54,24,20,'2026-04-25','2026-05-05','',22,1,NULL,'lunas',0),(57,24,20,'2026-04-28','2026-05-05','dipinjam',27,0,NULL,'belum',0);
 /*!40000 ALTER TABLE `peminjaman` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -297,7 +297,7 @@ CREATE TABLE `penerbit` (
   `nama_penerbit` varchar(100) NOT NULL,
   `alamat` text NOT NULL,
   PRIMARY KEY (`id_penerbit`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -306,7 +306,7 @@ CREATE TABLE `penerbit` (
 
 LOCK TABLES `penerbit` WRITE;
 /*!40000 ALTER TABLE `penerbit` DISABLE KEYS */;
-INSERT INTO `penerbit` VALUES (8,'Bentang Pustaka','Yogyakarta'),(9,'erlangga','Jl. H. Baping Raya No. 100, Ciracas, Jakarta Timur 13740. \r\nJDIH Provinsi Banten\r\n'),(10,'Elex Media Komputindo.','Gedung Kompas Gramedia, Jl. Palmerah Barat No. 29-37, Jakarta 10270, Indonesia'),(11,' Gramedia Pustaka Utama',''),(12,' Gramedia Pustaka Utama',''),(13,'Black Swan Books (PT Sinar Angsa Media-Black)',''),(14,'Gramedia Pustaka Utama',''),(15,'PT Simpul Aksara Grup (Simpul)',''),(16,'PT Gramedia Pustaka Utama',''),(17,'Gradien Mediatama','');
+INSERT INTO `penerbit` VALUES (8,'Bentang Pustaka','Yogyakarta'),(9,'erlangga','Jl. H. Baping Raya No. 100, Ciracas, Jakarta Timur 13740. \r\nJDIH Provinsi Banten\r\n'),(10,'Elex Media Komputindo.','Gedung Kompas Gramedia, Jl. Palmerah Barat No. 29-37, Jakarta 10270, Indonesia'),(11,' Gramedia Pustaka Utama',''),(12,' Gramedia Pustaka Utama',''),(13,'Black Swan Books (PT Sinar Angsa Media-Black)',''),(14,'Gramedia Pustaka Utama',''),(15,'PT Simpul Aksara Grup (Simpul)',''),(16,'PT Gramedia Pustaka Utama',''),(17,'Gradien Mediatama',''),(19,'pt. Rajagrafindo persada','');
 /*!40000 ALTER TABLE `penerbit` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -351,7 +351,7 @@ CREATE TABLE `pengembalian` (
   `denda` decimal(10,2) DEFAULT 0.00,
   PRIMARY KEY (`id_pengembalian`),
   KEY `pengembalian_ibfk_1` (`id_peminjaman`)
-) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -571,7 +571,7 @@ CREATE TABLE `users` (
   `status` enum('aktif','nonaktif') DEFAULT 'aktif',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -580,7 +580,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'siti humairoh','siti.humairoh3427@smk.belajar.id','umay','$2y$10$FIqSa8xGdrDEClyPkaCrHeA7EQk0EPDrtWc2Is4F38tK1U0vi6FHO','admin','1776485085_d3425f42deb0c9d501fe.png','aktif','2026-04-18 04:04:45'),(20,'iis sadiyah','iis@gmail.com','iis','$2y$10$LvbI4f3HCA/8HXVhuWqlrOwQT16ToqnE7uk1PQSsLUqNtDeaa/s/S','petugas','1776958255_43b9a9ce83231728e94c.jpg','aktif','2026-04-23 15:30:55'),(24,'siti kartika','siti@gmail.com','tika','$2y$10$h5q/YcbpHsgr8nCgTi9UkeKn5kHgjl.YxMRq5EMyqa7l9ge80UjMi','anggota','1776967015_aebaeef76bd968fddbab.jpg','aktif','2026-04-23 17:56:55'),(25,'imeysiti','imey@gmail.com','imey','$2y$10$TWOC7Y5cM2aPF6a1JW8guuzWny.mRKm7RAMl72dJHnJglIuKPWXES','petugas','1777181696_f2f6e2d05d7944b7d785.png','aktif','2026-04-26 05:34:56');
+INSERT INTO `users` VALUES (1,'siti humairoh','siti.humairoh3427@smk.belajar.id','umay','$2y$10$FIqSa8xGdrDEClyPkaCrHeA7EQk0EPDrtWc2Is4F38tK1U0vi6FHO','admin','1776485085_d3425f42deb0c9d501fe.png','aktif','2026-04-18 04:04:45'),(20,'iis sadiyah','iis@gmail.com','iis','$2y$10$LvbI4f3HCA/8HXVhuWqlrOwQT16ToqnE7uk1PQSsLUqNtDeaa/s/S','petugas','1776958255_43b9a9ce83231728e94c.jpg','aktif','2026-04-23 15:30:55'),(24,'siti kartika','siti@gmail.com','tika','$2y$10$h5q/YcbpHsgr8nCgTi9UkeKn5kHgjl.YxMRq5EMyqa7l9ge80UjMi','anggota','1776967015_aebaeef76bd968fddbab.jpg','aktif','2026-04-23 17:56:55'),(29,'fariq irsyad','fariq@gmail.com','icad','$2y$10$oEeUFnto/N5toj45gnKa1eUsT3qJka9lFO3tjhQMas56KKUMgmQdC','admin','1777366047_703530049e36c73b8aa8.png','aktif','2026-04-28 08:47:27');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -593,4 +593,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-26 17:18:54
+-- Dump completed on 2026-04-28 16:34:40
